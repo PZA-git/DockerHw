@@ -2,12 +2,11 @@ FROM ubuntu:18.04
 RUN apt update
 RUN apt install -y default-jdk
 RUN apt install -y tomcat8
-RUN apt install -y git  
+RUN apt install -y git
 RUN apt install -y maven
 RUN git clone https://github.com/boxfuse/boxfuse-sample-java-war-hello
-RUN cd /boxfuse-sample-java-war-hello/
+WORKDIR /boxfuse-sample-java-war-hello/
 RUN mvn package
-ADD /boxfuse-sample-java-war-hello/target/hello-1.0.war /var/lib/tomcat8/webapps/
-RUN service tomcat8 restart
-EXPOSE 80:80
-CMD ["/var/lib/tomcat8/webapps/hello-1.0.war", "-d"]
+RUN cp /boxfuse-sample-java-war-hello/target/hello-1.0.war /var/lib/tomcat8/webapps/
+EXPOSE 8080
+CMD ["catalina.sh", "run"]
