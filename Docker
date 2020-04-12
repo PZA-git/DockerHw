@@ -1,16 +1,12 @@
 FROM ubuntu:18.04
-RUN apt update
-RUN apt-get -y install openjdk-8-jdk wget
-RUN apt install -y git
-RUN apt install -y maven
+RUN apt update && apt-get -y install openjdk-8-jdk wget && apt install -y git && apt install -y maven
 RUN mkdir /usr/local/tomcat
-WORKDIR /tmp/
-RUN wget http://mirror.linux-ia64.org/apache/tomcat/tomcat-9/v9.0.34/bin/apache-tomcat-9.0.34.tar.gz
-RUN tar xvfz apache-tomcat-9.0.34.tar.gz
+WORKDIR tmp
+RUN wget http://mirror.linux-ia64.org/apache/tomcat/tomcat-9/v9.0.34/bin/apache-tomcat-9.0.34.tar.gz && tar xvfz apache-tomcat-9.0.34.tar.gz
 RUN cp -Rv /tmp/apache-tomcat-9.0.34/* /usr/local/tomcat/
-RUN git clone https://github.com/boxfuse/boxfuse-sample-java-war-hello
-WORKDIR /tmp/boxfuse-sample-java-war-hello/
+RUN git clone https://github.com/boxfuse/boxfuse-sample-java-war-hello myapp
+WORKDIR myapp
 RUN mvn package
-RUN cp /tmp/boxfuse-sample-java-war-hello/target/hello-1.0.war /usr/local/tomcat/webapps/
+RUN cp /tmp/myapp/target/hello-1.0.war /usr/local/tomcat/webapps/
 EXPOSE 8080
 CMD /usr/local/tomcat/bin/catalina.sh run
